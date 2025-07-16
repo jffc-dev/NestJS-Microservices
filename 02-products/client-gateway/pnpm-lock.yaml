@@ -13,10 +13,22 @@ importers:
         version: 11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core':
         specifier: ^11.0.1
-        version: 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+        version: 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@11.1.4)(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/mapped-types':
+        specifier: '*'
+        version: 2.1.0(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)
+      '@nestjs/microservices':
+        specifier: ^11.1.4
+        version: 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/platform-express':
         specifier: ^11.0.1
         version: 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)
+      dotenv:
+        specifier: ^17.2.0
+        version: 17.2.0
+      joi:
+        specifier: ^17.13.3
+        version: 17.13.3
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -38,7 +50,7 @@ importers:
         version: 11.0.5(chokidar@4.0.3)(typescript@5.8.3)
       '@nestjs/testing':
         specifier: ^11.0.1
-        version: 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(@nestjs/platform-express@11.1.4)
+        version: 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(@nestjs/microservices@11.1.4)(@nestjs/platform-express@11.1.4)
       '@swc/cli':
         specifier: ^0.6.0
         version: 0.6.0(@swc/core@1.12.14)(chokidar@4.0.3)
@@ -347,6 +359,12 @@ packages:
   '@eslint/plugin-kit@0.3.3':
     resolution: {integrity: sha512-1+WqvgNMhmlAambTvT3KPtCl/Ibr68VldY2XY40SL1CE0ZXiakFR/cbTspaF5HsnpDMvcYYoJHfl4980NBjGag==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@hapi/hoek@9.3.0':
+    resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
+
+  '@hapi/topo@5.1.0':
+    resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -751,6 +769,55 @@ packages:
       '@nestjs/websockets':
         optional: true
 
+  '@nestjs/mapped-types@2.1.0':
+    resolution: {integrity: sha512-W+n+rM69XsFdwORF11UqJahn4J3xi4g/ZEOlJNL6KoW5ygWSmBB2p0S2BZ4FQeS/NDH72e6xIcu35SfJnE8bXw==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0 || ^11.0.0
+      class-transformer: ^0.4.0 || ^0.5.0
+      class-validator: ^0.13.0 || ^0.14.0
+      reflect-metadata: ^0.1.12 || ^0.2.0
+    peerDependenciesMeta:
+      class-transformer:
+        optional: true
+      class-validator:
+        optional: true
+
+  '@nestjs/microservices@11.1.4':
+    resolution: {integrity: sha512-c8nahB7Pwh01Tu5j/M1D/l1PC/mqs0Y5fBtYyAqvPrjg/aCMTQagEFWtHogZsYctT6B+BfriZYb9uLsMEGk5Uw==}
+    peerDependencies:
+      '@grpc/grpc-js': '*'
+      '@nestjs/common': ^11.0.0
+      '@nestjs/core': ^11.0.0
+      '@nestjs/websockets': ^11.0.0
+      amqp-connection-manager: '*'
+      amqplib: '*'
+      cache-manager: '*'
+      ioredis: '*'
+      kafkajs: '*'
+      mqtt: '*'
+      nats: '*'
+      reflect-metadata: ^0.1.12 || ^0.2.0
+      rxjs: ^7.1.0
+    peerDependenciesMeta:
+      '@grpc/grpc-js':
+        optional: true
+      '@nestjs/websockets':
+        optional: true
+      amqp-connection-manager:
+        optional: true
+      amqplib:
+        optional: true
+      cache-manager:
+        optional: true
+      ioredis:
+        optional: true
+      kafkajs:
+        optional: true
+      mqtt:
+        optional: true
+      nats:
+        optional: true
+
   '@nestjs/platform-express@11.1.4':
     resolution: {integrity: sha512-SDpfSDJogCZ3fOeP518+GdjKnpJc51LN0dylapq3xBfxJeiEOqmqiZM1tWMOsoijPlUVsz0acpmaVEaOiMXpXw==}
     peerDependencies:
@@ -805,6 +872,15 @@ packages:
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
+
+  '@sideway/address@4.1.5':
+    resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
+
+  '@sideway/formula@3.0.1':
+    resolution: {integrity: sha512-/poHZJJVjx3L+zVD6g9KgHfYnb443oi7wLu/XKojDviHy6HOEOA6z1Trk5aR1dGcmPenJEgb2sK2I80LeS3MIg==}
+
+  '@sideway/pinpoint@2.0.0':
+    resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -1626,6 +1702,10 @@ packages:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
 
+  dotenv@17.2.0:
+    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
+    engines: {node: '>=12'}
+
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -2319,6 +2399,9 @@ packages:
     peerDependenciesMeta:
       node-notifier:
         optional: true
+
+  joi@17.13.3:
+    resolution: {integrity: sha512-otDA4ldcIx+ZXsKHWmp0YizCweVRZG96J10b0FevjfuncLO1oX59THoAmHkNubYJ+9gWsYsp5k8v4ib6oDv1fA==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -3646,6 +3729,12 @@ snapshots:
       '@eslint/core': 0.15.1
       levn: 0.4.1
 
+  '@hapi/hoek@9.3.0': {}
+
+  '@hapi/topo@5.1.0':
+    dependencies:
+      '@hapi/hoek': 9.3.0
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -4113,7 +4202,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@nestjs/core@11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
+  '@nestjs/core@11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@11.1.4)(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
     dependencies:
       '@nestjs/common': 11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nuxt/opencollective': 0.4.1
@@ -4125,12 +4214,27 @@ snapshots:
       tslib: 2.8.1
       uid: 2.0.2
     optionalDependencies:
+      '@nestjs/microservices': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/platform-express': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)
+
+  '@nestjs/mapped-types@2.1.0(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)':
+    dependencies:
+      '@nestjs/common': 11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      reflect-metadata: 0.2.2
+
+  '@nestjs/microservices@11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
+    dependencies:
+      '@nestjs/common': 11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@11.1.4)(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      iterare: 1.2.1
+      reflect-metadata: 0.2.2
+      rxjs: 7.8.2
+      tslib: 2.8.1
 
   '@nestjs/platform-express@11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)':
     dependencies:
       '@nestjs/common': 11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@11.1.4)(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       cors: 2.8.5
       express: 5.1.0
       multer: 2.0.1
@@ -4150,12 +4254,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/testing@11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(@nestjs/platform-express@11.1.4)':
+  '@nestjs/testing@11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(@nestjs/microservices@11.1.4)(@nestjs/platform-express@11.1.4)':
     dependencies:
       '@nestjs/common': 11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@11.1.4)(@nestjs/platform-express@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       tslib: 2.8.1
     optionalDependencies:
+      '@nestjs/microservices': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/platform-express': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)
 
   '@noble/hashes@1.8.0': {}
@@ -4183,6 +4288,14 @@ snapshots:
   '@pkgr/core@0.2.7': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
+
+  '@sideway/address@4.1.5':
+    dependencies:
+      '@hapi/hoek': 9.3.0
+
+  '@sideway/formula@3.0.1': {}
+
+  '@sideway/pinpoint@2.0.0': {}
 
   '@sinclair/typebox@0.27.8': {}
 
@@ -5087,6 +5200,8 @@ snapshots:
   diff-sequences@29.6.3: {}
 
   diff@4.0.2: {}
+
+  dotenv@17.2.0: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -6019,6 +6134,14 @@ snapshots:
       - babel-plugin-macros
       - supports-color
       - ts-node
+
+  joi@17.13.3:
+    dependencies:
+      '@hapi/hoek': 9.3.0
+      '@hapi/topo': 5.1.0
+      '@sideway/address': 4.1.5
+      '@sideway/formula': 3.0.1
+      '@sideway/pinpoint': 2.0.0
 
   js-tokens@4.0.0: {}
 
