@@ -1,12 +1,28 @@
-import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaClient } from 'generated/prisma/client';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { OrderPaginationDto } from './dto/pagination-order.dto';
 import { ChangeOrderStatusDto } from './dto/chage-status.dto';
+import { PRODUCT_SERVICE } from 'src/config/services';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class OrdersService extends PrismaClient implements OnModuleInit {
+  constructor(
+    @Inject(PRODUCT_SERVICE) private readonly productClient: ClientProxy,
+  ) {
+    super();
+  }
   private readonly logger = new Logger('OrdersService');
 
   async onModuleInit() {
@@ -14,8 +30,74 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
     this.logger.log('Connected to the database');
   }
 
-  create(createOrderDto: CreateOrderDto) {
-    return this.order.create({ data: createOrderDto });
+  async create(createOrderDto: CreateOrderDto) {
+    try {
+      const productsIds = createOrderDto.items.map((item) => item.productId);
+      const products = await firstValueFrom(
+        this.productClient.send({ cmd: 'validate_products' }, productsIds),
+      );
+
+      const totalAmount = createOrderDto.items.reduce((acc, orderItem) => {
+        const price = products.find(
+          (product) => product.id === orderItem.productId,
+        ).price;
+        return acc + price * orderItem.quantity;
+      }, 0);
+
+      const totalItems = createOrderDto.items.reduce((acc, orderItem) => {
+        return acc + orderItem.quantity;
+      }, 0);
+
+      const order = await this.order.create({
+        data: {
+          totalAmount,
+          totalItems,
+          items: {
+            createMany: {
+              data: createOrderDto.items.map((orderItem) => {
+                return {
+                  price: products.find(
+                    (product) => product.id === orderItem.productId,
+                  ).price,
+                  productId: orderItem.productId,
+                  quantity: orderItem.quantity,
+                };
+              }),
+            },
+          },
+        },
+        include: {
+          items: {
+            select: {
+              productId: true,
+              quantity: true,
+              price: true,
+            },
+          },
+        },
+      });
+
+      return {
+        ...order,
+        items: order.items.map((item) => {
+          return {
+            productId: item.productId,
+            productName: products.find(
+              (product) => product.id === item.productId,
+            ).name,
+            quantity: item.quantity,
+            price: item.price,
+          };
+        }),
+      };
+    } catch (error) {
+      this.logger.error('Error creating order', error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Error creating order',
+      });
+    }
+    // return this.order.create({ data: createOrderDto });
   }
 
   async findAll(orderPaginationDto: OrderPaginationDto) {
@@ -43,7 +125,18 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
   }
 
   async findOne(id: string) {
-    const order = await this.order.findUnique({ where: { id } });
+    const order = await this.order.findUnique({
+      where: { id },
+      include: {
+        items: {
+          select: {
+            productId: true,
+            quantity: true,
+            price: true,
+          },
+        },
+      },
+    });
 
     if (!order) {
       throw new RpcException({
@@ -51,7 +144,23 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
         message: `Order with id ${id} not found`,
       });
     }
-    return this.order.findUnique({ where: { id } });
+
+    const productIds = order.items.map((item) => item.productId);
+    const products = await firstValueFrom(
+      this.productClient.send({ cmd: 'validate_products' }, productIds),
+    );
+    return {
+      ...order,
+      items: order.items.map((item) => {
+        return {
+          productId: item.productId,
+          productName: products.find((product) => product.id === item.productId)
+            .name,
+          quantity: item.quantity,
+          price: item.price,
+        };
+      }),
+    };
   }
 
   async changeStatus(changeOrderStatusDto: ChangeOrderStatusDto) {

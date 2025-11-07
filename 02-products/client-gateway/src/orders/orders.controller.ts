@@ -11,7 +11,6 @@ import {
   ParseUUIDPipe,
   Query,
 } from '@nestjs/common';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { ORDER_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';

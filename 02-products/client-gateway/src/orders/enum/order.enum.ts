@@ -1,11 +1,11 @@
 export enum OrderStatus {
   PENDING = 'PENDING',
   CANCELED = 'CANCELED',
-  COMPLETED = 'COMPLETED',
+  DELIVERED = 'DELIVERED',
 }
 
 export const OrderStatusList = [
   OrderStatus.PENDING,
   OrderStatus.CANCELED,
-  OrderStatus.COMPLETED,
+  OrderStatus.DELIVERED,
 ];
