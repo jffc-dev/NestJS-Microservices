@@ -12,28 +12,23 @@ import {
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { PaginationDto } from 'src/common';
-import { PRODUCT_SERVICE } from 'src/config';
+import { NATS_SERVICE } from 'src/config';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetOneProductDto } from './dto/output/get-one-product';
 
 @Controller('products')
 export class ProductsController {
-  constructor(
-    @Inject(PRODUCT_SERVICE) private readonly productsClient: ClientProxy,
-  ) {}
+  constructor(@Inject(NATS_SERVICE) private readonly natsClient: ClientProxy) {}
 
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
-    return this.productsClient.send(
-      { cmd: 'create_product' },
-      createProductDto,
-    );
+    return this.natsClient.send({ cmd: 'create_product' }, createProductDto);
   }
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.productsClient.send(
+    return this.natsClient.send(
       { cmd: 'find_all_products' },
       { ...paginationDto },
     );
@@ -41,7 +36,7 @@ export class ProductsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    // return this.productsClient
+    // return this.natsClient
     //   .send<GetOneProductDto>({ cmd: 'find_one_product' }, { id: Number(id) })
     //   .pipe(
     //     catchError((error) => {
@@ -50,7 +45,7 @@ export class ProductsController {
     //   );
     try {
       const product: GetOneProductDto = await firstValueFrom(
-        this.productsClient.send({ cmd: 'find_one_product' }, { id }),
+        this.natsClient.send({ cmd: 'find_one_product' }, { id }),
       );
       return product;
     } catch (error) {
@@ -65,7 +60,7 @@ export class ProductsController {
   ) {
     try {
       const product: GetOneProductDto = await firstValueFrom(
-        this.productsClient.send(
+        this.natsClient.send(
           { cmd: 'update_product' },
           { id: +id, ...updateProductDto },
         ),
@@ -80,7 +75,7 @@ export class ProductsController {
   async remove(@Param('id') id: string) {
     try {
       const product: GetOneProductDto = await firstValueFrom(
-        this.productsClient.send({ cmd: 'delete_product' }, { id: +id }),
+        this.natsClient.send({ cmd: 'delete_product' }, { id: +id }),
       );
       return product;
     } catch (error) {
