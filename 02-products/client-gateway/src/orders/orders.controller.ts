@@ -28,8 +28,15 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(@Query() paginationDto: OrderPaginationDto) {
-    return this.natsClient.send({ cmd: 'find_all_orders' }, paginationDto);
+  async findAll(@Query() paginationDto: OrderPaginationDto) {
+    try {
+      const orders = await firstValueFrom(
+        this.natsClient.send({ cmd: 'find_all_orders' }, paginationDto),
+      );
+      return orders;
+    } catch (error) {
+      throw new RpcException(error);
+    }
   }
 
   @Get(':id')
